@@ -30,3 +30,14 @@ The paper reports about 37 dB. With these stated parameters the best possible at
 (median Wiener optimum; range 13.7 to 18.2 dB): truncating the responses at 512 taps leaves energy that a 512-tap filter cannot cancel (the
 speaker path adds a 74-sample delay). Bandlimiting the noise or tapering the responses did not change this. The paper's setup must differ
 in an unreported detail. Relative comparisons (convergence speed) remain valid.
+
+## Part 3: matched latent-space comparison
+
+AE+mixup was trained for 80 epochs on the real `W.npy` filters (1,792 train positions, 256 held-out positions, global scale 0.8271, 64 mixup samples per batch). The decoder maps 32 latent coordinates to the original 512-tap control filter. Latent updates use the same per-sample power normalization as Part 1 and a vector-Jacobian product for the decoder projection.
+
+| Controller | Convergence after source jump (blocks) | Steady-state attenuation (dB) |
+|---|---:|---:|
+| FxLMS, μ=32 | 73.18 ± 16.24 | 14.69 ± 1.98 |
+| Latent FxLMS, μz=80 | 17.30 ± 6.36 | 9.10 ± 1.78 |
+
+Both controllers used the same 50 seeds, broadband reference, room paths, source switch at block 100, and last-40-block attenuation metric. In this exploratory sweep, μz=80 reduced mean post-jump recovery time by about 4.2×, while losing about 5.6 dB of late attenuation. The step size was compared on this same 50-seed set, so this result is not an independent held-out hyperparameter evaluation. See `part3/outputs/comparison.json` for the per-trial values and runtime.

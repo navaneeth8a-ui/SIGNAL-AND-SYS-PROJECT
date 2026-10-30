@@ -4,9 +4,9 @@ from fxlms import *
 P=np.load('P.npy'); g=np.load('g.npy'); ghat=np.load('ghat.npy')
 NB, SW = 400, 100
 
-def run_trial(mu, seed, update=None):
+def run_trial(mu, seed):
     """Returns (on_mse, off_mse): per-block MSE with ANC on / off, arrays of length NB.
-    `update` is reserved for Part 3 (a latent-update function); default = plain block NLMS-FxLMS."""
+    Part 3's decoder-backed controller is evaluated by part3/run_comparison.py."""
     rng = np.random.default_rng(seed)
     k1, k2 = rng.choice(P.shape[1], 2, replace=False)
     x = rng.standard_normal(PRE + NB*100)
